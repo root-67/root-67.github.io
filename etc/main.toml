@@ -1,0 +1,45 @@
+Title = "Root-67-Admin"
+
+[webserver]
+# Secrets injected via .env:
+#   GPDNS_WEBSERVER_COOKIEENCRYPTIONKEY
+#   GPDNS_WEBSERVER_ARGON2SALT
+CookieEncryptionKey = "7mzHdKdxKoJ7pvRGFyAB2FgcbjnGv5r66tadd7hNrxA="
+Argon2Salt          = "orWk8hFVc3EWLCXOyZrH9dxqu37yw4Ot"
+Port                = 8080
+URL                 = "https://root-67.github.io"   # overridden by GPDNS_WEBSERVER_URL
+Domain              = "root-67.github.io"           # overridden by GPDNS_WEBSERVER_DOMAIN
+
+# HAProxy terminates TLS — ACME not needed inside the VM.
+ACMEEnabled = true
+ACMEDomain = "dns.drthesmos.cv"
+ACMEEmail = "hostadmin@drthesmos.cv"
+ACMECacheDir = "/var/lib/go-pdns/acme-cache"
+
+[webserver.reverseproxy]
+enabled    = true
+trustedips = ["192.168.21.1", "10.89.0.0/24"]
+
+[webserver.session]
+ExpiryTime = "24h"
+
+# SQLite on a bind-mounted directory — easy to wipe for demo resets.
+[DB]
+GormEngine = "sqlite"
+Name       = "/var/lib/go-pdns/go-pdns.db"
+
+[log]
+Level = "info"
+
+[log.Console]
+Enable = true
+
+[auth.LocalDB]
+enabled = true
+
+# PowerDNS server bootstrap — seeded into the DB on the first startup.
+# APIKey is injected via GPDNS_PDNS_APIKEY in the compose env.
+[pdns]
+APIServerURL = "http://dns.drthesmos.cv:8081"
+APIKey       = "675126761369856002f94d57ff0d4a0b4318324014af80ff0638668e03ec35fc"
+VHost        = "dns.drthesmos.cv"
