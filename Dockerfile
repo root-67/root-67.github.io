@@ -9,7 +9,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux \
     go build \
-    -ldflags="-s -w -X github.com/GoPowerDNS-Admin/GoPowerDNS-Admin/internal/version.version=${VERSION}" \
+    -ldflags="-s -w -X github.com/root-67/root-67.github.io/internal/version.version=${VERSION}" \
     -o go-pdns .
 
 FROM alpine:latest
