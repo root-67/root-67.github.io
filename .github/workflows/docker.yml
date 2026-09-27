@@ -10,6 +10,10 @@ env:
   IMAGE_NAME: 67-admin
   IMAGE_TAGS: latest
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,18 +33,23 @@ jobs:
     steps:
        - name: Checkout
          uses: actions/checkout@v7
-       - name: Install dependencies
-         run: |
-            apt-get update && apt-get install -y git nodejs python3-pip
-            pip3 install pre-commit --break-system-packages
-            go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
-            echo "/github/workspace/go/bin" >> $GITHUB_PATH
-       - name: Configure git safe directory
-         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-       - name: Go Build
-         uses: go build -v ./...
+       - name: Setup Go
+         uses: actions/setup-go@v7
+         with:
+            go-version-file: go.mod
+       - name: Build
          env:
+            GOOS: linux
+            GOARCH: amd64
             CGO_ENABLED: "0"
+         run: |
+            mkdir -p build
+            go build -v \
+            -ldflags="-s -w \
+              -X github.com/root-67/root-67.github.io/internal/version.version=latest \
+              -X github.com/root-67/root-67.github.io/internal/version.branch=master" \
+            -o build/go-pdns \ 
+            .
        - name: Setup QEMU
          uses: docker/setup-qemu-action@v3
        - name: Set up Docker Buildx

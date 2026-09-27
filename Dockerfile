@@ -1,4 +1,4 @@
-FROM golang:1.27.1-alpine AS builder
+FROM golang:1.27.1 AS builder
 
 WORKDIR /build
 
@@ -9,7 +9,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux \
     go build \
-    -ldflags="-s -w -X github.com/root-67/root-67.github.io/internal/version.version=${VERSION}" \
+    -ldflags="-s -w -X github.com/root-67/root-67.github.io/internal/version.version=latest" \
     -o go-pdns .
 
 FROM alpine:latest
