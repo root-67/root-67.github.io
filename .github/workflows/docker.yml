@@ -48,8 +48,7 @@ jobs:
        - name: Go build
          run: go build . 
          env:
-            CGO_ENABLED: 0
-         run: 
+            CGO_ENABLED: "0" 
        - name: Setup QEMU
          uses: docker/setup-qemu-action@v3
        - name: Set up Docker Buildx
