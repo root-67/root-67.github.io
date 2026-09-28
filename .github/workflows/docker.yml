@@ -6,6 +6,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  GITHUB_PATH: github.com/root-67/root-67.github.io
   REGISTRY: ghcr.io
   IMAGE_NAME: 67-admin
   IMAGE_TAGS: latest
