@@ -1,4 +1,4 @@
-FROM golang:1.27.1 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.27.1-alpine
 
 WORKDIR /build
 
@@ -7,18 +7,11 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux \
-    go build \
-    -ldflags="-s -w -X github.com/root-67/root-67.github.io/internal/version.version=latest" \
-    -o go-pdns .
-
-FROM alpine:latest
-
 RUN apk add --no-cache ca-certificates tzdata
 
 WORKDIR /app
 
-COPY --from=builder /build/go-pdns /app/go-pdns
+COPY ./build/go-pdns /app/go-pdns
 
 RUN mkdir -p /etc/go-pdns /var/lib/go-pdns
 
