@@ -45,11 +45,9 @@ jobs:
          uses: actions/setup-go@v7
          with:
             go-version-file: go.mod
-       - name: Build
-         run: go build -v 
+       - name: Go build
+         run: go build . 
          env:
-            GOOS: linux
-            GOARCH: amd64
             CGO_ENABLED: 0
          run: 
        - name: Setup QEMU
