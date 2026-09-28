@@ -43,12 +43,12 @@ jobs:
             GOARCH: amd64
             CGO_ENABLED: "0"
          run: |
-            mkdir -p build
+            mkdir -p dist
             go build -v \
             -ldflags="-s -w \
               -X github.com/root-67/root-67.github.io/internal/version.version=latest \
               -X github.com/root-67/root-67.github.io/internal/version.branch=master" \
-            -o build/go-pdns \ 
+            -o dist/go-pdns \ 
             .
        - name: Setup QEMU
          uses: docker/setup-qemu-action@v3
